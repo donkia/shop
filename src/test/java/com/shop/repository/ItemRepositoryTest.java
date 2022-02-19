@@ -1,5 +1,6 @@
 package com.shop.repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shop.constant.ItemSellStatus;
 import com.shop.entity.Item;
 import org.junit.jupiter.api.DisplayName;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,6 +22,10 @@ class ItemRepositoryTest {
 
     @Autowired
     ItemRepository itemRepository;
+
+    // 영속성 컨텍스트를 사용하기 위해 @PersistenceContext 어노테이션 이용
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     @DisplayName("상품 저장 테스트")
@@ -81,6 +88,17 @@ class ItemRepositoryTest {
         for (Item item : itemList) {
             System.out.println(item.toString());
         }
+    }
+
+    @Test
+    @DisplayName("Querydsl 조회테스트1")
+    public void queryDslTest(){
+        this.createItemList();
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+
+
+
     }
 
 }
