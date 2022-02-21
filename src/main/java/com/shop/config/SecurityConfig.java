@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /***
  * WebSecurityConfigurerAdapter를 상속받는 클래스에 @EnableWebSecurity 선언하면 SpringSecurityFilterChain이 자동으로 포함
@@ -22,6 +23,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.formLogin()
+                .loginPage("/members/login")
+                .defaultSuccessUrl("/")
+                .usernameParameter("email")
+                .failureUrl("/members/login/error")
+                .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/members/logout"))
+                .logoutSuccessUrl("/");
 
     }
 
