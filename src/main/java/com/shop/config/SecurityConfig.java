@@ -33,6 +33,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/members/logout"))
                 .logoutSuccessUrl("/");
 
+        http.authorizeRequests()
+                .mvcMatchers("/", "/members/**", "/item/**", "/images/**").permitAll()
+                .mvcMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated();
+
+        http.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+
     }
 
     /** DB에 패스워드 저장 시 암호화 가능
@@ -41,5 +48,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        // static 하위 파일은 인증을 무시
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**");
     }
 }
