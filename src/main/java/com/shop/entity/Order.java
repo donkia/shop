@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @ToString
 @Table(name = "orders")
-public class Order {
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -24,7 +24,7 @@ public class Order {
 
     /** 한명의 회원은 여러번 주문이 가능하므로 @ManyToOne
      * */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -33,10 +33,10 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus; //주문 상태
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    private LocalDateTime regTime;
+    //private LocalDateTime regTime;
 
-    private LocalDateTime updateTime;
+    //private LocalDateTime updateTime;
 }
